@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    table {
+      width: 50%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+
+    header{
+        text-align: center;
+        font-size: 40px;
+        color: blue;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    footer{
+
+    }
+
+  </style>
+</head>
+<body>
+<header>Calculate hours</header>
+<button onclick="addRow()" >+</button>
+<table id="timeTable">
+  <thead>
+    <tr>
+      <th>Number</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Total Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><input type="text" id="start1" value="08:00"></td>
+      <td><input type="text" id="end1" value="10:00" onblur="calculateTotalTime(rowID)"></td>
+      <td id="totalTime1"></td>
+    </tr>
+    <tr>
+      <td id="rowNumber2"></td>
+      <td><input type="text" id="start2" value="11:00"></td>
+      <td id="calculatedendtime"></td>
+      <td><input type="text" id="totalTime" value="08:30" onblur="calculateEndTime()"></td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+
+let rowID = 1
+let rowNum = 1;
+let totalTime = 0;
+let totalMinutes = 0;
+document.getElementById('rowNumber2').textContent = 2
+
+function addRow() {
+    rowNum++;
+
+    const table = document.getElementById('timeTable').getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow(table.rows.length - 1);
+
+    const cell1 = newRow.insertCell(0);
+    const cell2 = newRow.insertCell(1);
+    const cell3 = newRow.insertCell(2);
+    const cell4 = newRow.insertCell(3);
+
+    cell1.innerHTML = rowNum;
+    cell2.innerHTML = `<input type="text" id="start${rowNum}" placeholder="HH:MM" maxlength="5">`;
+    cell3.innerHTML = `<input type="text" id="end${rowNum}" placeholder="HH:MM" maxlength="5" onblur="calculateTotalTime(${rowNum})">`;
+    cell4.innerHTML = '';
+    
+    // Assign a unique ID to the total time cell
+    cell4.id = `totalTime${rowNum}`;
+    // Update the row number in the second row
+    document.getElementById('rowNumber2').textContent = rowNum + 1;
+
+    const buttonCell = newRow.insertCell(4);
+    buttonCell.innerHTML = `<button onclick="removeRow(this)" id="removeB${rowNum}">-</button>`;
+    if (rowNum > 2) {
+        console.log("removeB: " + `removeB${rowNum-1}`);
+        document.getElementById(`removeB${rowNum - 1}`).style.display = 'none';
+    }
+}
+
+function removeRow(button) {
+    const row = button.parentNode.parentNode;
+    rowNum--;
+    row.parentNode.removeChild(row);
+    document.getElementById('rowNumber2').textContent = rowNum + 1;
+    if (rowNum > 1) {
+        document.getElementById(`removeB${rowNum}`).style.display = 'block';
+    }
+}
+
+function calculateTotalTime(row) {
+    console.log("row: " +row)
+    const start = document.getElementById(`start${row}`).value;
+    const end = document.getElementById(`end${row}`).value;
+
+    const [startHours, startMinutes] = start.split(':').map(val => parseInt(val));
+    const [endHours, endMinutes] = end.split(':').map(val => parseInt(val));
+
+    console.log('totalMinutes: ' + totalMinutes)
+
+    totalMinutes += (endHours - startHours) * 60 + (endMinutes - startMinutes);
+
+    console.log('totalMinutes: ' + totalMinutes)
+
+    const totalTimeCell = document.getElementById(`totalTime${row}`);
+    
+    totalTimeCell.textContent = `${Math.floor(totalMinutes / 60).toString().padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}`;
+}
+
+function calculateEndTime() {
+    const start2 = document.getElementById('start2').value;
+    console.log("start: " + document.getElementById('start2').value)
+    console.log('totalMinutes: ' + totalMinutes)
+    totalMinutes = getTotalTimeInMinutes();
+    console.log('totalMinutes: ' + totalMinutes)
+    const [start2Hours, start2Minutes] = start2.split(':').map(val => parseInt(val));
+
+    const endTimeHours = Math.floor((start2Hours * 60 + start2Minutes + totalMinutes) / 60);
+    const endTimeMinutes = (start2Hours * 60 + start2Minutes + totalMinutes) % 60;
+
+    const EndTimeOutput = document.getElementById('calculatedendtime');
+    console.log('EndTimeOutput: ' + EndTimeOutput.value)
+    EndTimeOutput.textContent = `${endTimeHours.toString().padStart(2, '0')}:${endTimeMinutes.toString().padStart(2, '0')}`;
+
+}
+
+function getTotalTimeInMinutes() {
+    const totalTimeInput = document.getElementById('totalTime').value;
+    const [totalTimeHours, totalTimeMinutes] = totalTimeInput.split(':').map(val => parseInt(val));
+    return totalTimeHours * 60 + totalTimeMinutes - totalMinutes;
+
+
+}
+</script>
+
+</body>
+</html>
