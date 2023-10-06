@@ -62,7 +62,7 @@
   <tbody>
     <tr>
       <td id="rowNumber1"></td>
-      <td><input type="text" id="start2" placeholder="HH:MM"> <style></style></td>
+      <td><input type="text" id="start" placeholder="HH:MM"> <style></style></td>
       <td id="calculatedendtime"></td>
       <td><input type="text" id="totalTime" value="08:30" onblur="calculateEndTime()"></td>
     </tr>
@@ -136,12 +136,12 @@ function calculateTotalTime(row) {
 }
 
 function calculateEndTime() {
-    const start2 = document.getElementById('start2').value;
-    console.log("start: " + document.getElementById('start2').value)
+    const start = document.getElementById('start').value;
+    console.log("start: " + document.getElementById('start').value)
     console.log('totalMinutes: ' + totalMinutes)
     totalMinutes = getTotalTimeInMinutes();
     console.log('totalMinutes: ' + totalMinutes)
-    const [start2Hours, start2Minutes] = start2.split(':').map(val => parseInt(val));
+    const [start2Hours, start2Minutes] = start.split(':').map(val => parseInt(val));
 
     const endTimeHours = Math.floor((start2Hours * 60 + start2Minutes + totalMinutes) / 60);
     const endTimeMinutes = (start2Hours * 60 + start2Minutes + totalMinutes) % 60;
