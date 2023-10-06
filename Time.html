@@ -3,7 +3,7 @@
 <head>
   <style>
     table {
-      width: 50%;
+      width: 100%;
       margin: 20px auto;
       border-collapse: collapse;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,8 +11,16 @@
 
     th, td {
       border: 1px solid black;
-      padding: 10px;
+      padding: 30px;
       text-align: center;
+      font-size: 40px;
+    }
+
+    input[type="text"] {
+      width: 170px; /* Adjust the width as needed */
+      height: 50px; /* Adjust the height as needed */
+      padding: 30px;
+      font-size: 50px; /* Adjust the font size as needed */
     }
 
     header{
@@ -30,7 +38,6 @@
 </head>
 <body>
 <header>Calculate hours</header>
-<button onclick="addRow()" >+</button>
 <table id="timeTable">
   <thead>
     <tr>
@@ -38,18 +45,13 @@
       <th>Start Time</th>
       <th>End Time</th>
       <th>Total Time</th>
+      <th><button onclick="addRow()" >+</button></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>1</td>
-      <td><input type="text" id="start1" placeholder="HH:MM"></td>
-      <td><input type="text" id="end1" placeholder="HH:MM" onblur="calculateTotalTime(rowID)"></td>
-      <td id="totalTime1"></td>
-    </tr>
-    <tr>
-      <td id="rowNumber2"></td>
-      <td><input type="text" id="start2" placeholder="HH:MM"></td>
+      <td id="rowNumber1"></td>
+      <td><input type="text" id="start2" placeholder="HH:MM"> <style></style></td>
       <td id="calculatedendtime"></td>
       <td><input type="text" id="totalTime" value="08:30" onblur="calculateEndTime()"></td>
     </tr>
@@ -59,10 +61,10 @@
 <script>
 
 let rowID = 1
-let rowNum = 1;
+let rowNum = 0;
 let totalTime = 0;
 let totalMinutes = 0;
-document.getElementById('rowNumber2').textContent = 2
+document.getElementById('rowNumber1').textContent = 1
 
 function addRow() {
     rowNum++;
@@ -83,13 +85,13 @@ function addRow() {
     // Assign a unique ID to the total time cell
     cell4.id = `totalTime${rowNum}`;
     // Update the row number in the second row
-    document.getElementById('rowNumber2').textContent = rowNum + 1;
+    document.getElementById('rowNumber1').textContent = rowNum + 1;
 
     const buttonCell = newRow.insertCell(4);
     buttonCell.innerHTML = `<button onclick="removeRow(this)" id="removeB${rowNum}">-</button>`;
-    if (rowNum > 2) {
+    if (rowNum>1){
         console.log("removeB: " + `removeB${rowNum-1}`);
-        document.getElementById(`removeB${rowNum - 1}`).style.display = 'none';
+        document.getElementById(`removeB${rowNum-1}`).style.display = 'none';
     }
 }
 
@@ -97,8 +99,8 @@ function removeRow(button) {
     const row = button.parentNode.parentNode;
     rowNum--;
     row.parentNode.removeChild(row);
-    document.getElementById('rowNumber2').textContent = rowNum + 1;
-    if (rowNum > 1) {
+    document.getElementById('rowNumber1').textContent = rowNum + 1;
+    if (rowNum > 0) {
         document.getElementById(`removeB${rowNum}`).style.display = 'block';
     }
 }
